@@ -20,12 +20,12 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "1.7.10-0.1"
+version = "1.8.x-0.1"
 group= "com.leviathan143.craftingutils" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "CraftingUtils"
 
 minecraft {
-    version = "1.8.9-11.15.0.1693"
+    version = "1.8.9-11.15.1.1726"
 	if(file('../run').exists())
 		{runDir = "../run"}
     else 
@@ -70,7 +70,7 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-	deobfCompile "mezz.jei:jei_1.8.9:2.16.0.74"
+	deobfCompile "mezz.jei:jei_1.8.9:2.25.11.151"
 }
 
 processResources

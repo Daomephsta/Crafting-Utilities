@@ -1,12 +1,15 @@
 package com.leviathan143.craftingutils.client.gui.ingredientList;
 
+import com.leviathan143.craftingutils.client.gui.lib.GuiListEntry;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-public class Ingredient extends GuiListEntry 
+public class Ingredient extends GuiListEntry
 {
 	public final ItemStack stack;
 	private String text;
@@ -14,7 +17,10 @@ public class Ingredient extends GuiListEntry
 	public Ingredient(ItemStack stack) 
 	{
 		this.stack = stack;
-		this.text = I18n.format(stack.getUnlocalizedName() + ".name") + " x" + stack.stackSize;
+		if (stack.getItem() instanceof ItemBlock)
+			this.text = I18n.format(((ItemBlock)stack.getItem()).getBlock().getLocalizedName()) + " x" + stack.stackSize;
+		else 
+			this.text = I18n.format(stack.getUnlocalizedName() + ".name") + " x" + stack.stackSize;
 	}
 	
 	public Ingredient(Item item) 
@@ -51,6 +57,12 @@ public class Ingredient extends GuiListEntry
 	@Override
 	public void onClicked(int button) 
 	{
-		this.checked = true;
+		this.checked = !this.checked;
+	}
+	
+	@Override
+	public String toString() 
+	{
+		return stack.toString();
 	}
 }

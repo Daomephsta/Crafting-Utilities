@@ -1,4 +1,4 @@
-package com.leviathan143.craftingutils.client.gui.ingredientList;
+package com.leviathan143.craftingutils.client.gui.lib;
 
 import net.minecraft.client.Minecraft;
 

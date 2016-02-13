@@ -1,4 +1,4 @@
-package com.leviathan143.craftingutils.client.gui.ingredientList;
+package com.leviathan143.craftingutils.client.gui.lib;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +16,8 @@ public class GuiList extends Gui
 	private List<GuiListEntry> entries;
 	private List<GuiListEntry> visibleEntries;
 	private int[] visibleEntryCoords = new int[2];
+	
+	private final int ENTRYPADDING = 10;
 
 	private int xPos, yPos, width, height;
 
@@ -33,13 +35,11 @@ public class GuiList extends Gui
 	{
 		if (this.entries.size() < 5)
 		{
-			this.visibleEntries = entries;
+			setVisible(0, entries.size());
 		}
 		else
 		{
-			this.visibleEntries = entries.subList(0, 5);
-			visibleEntryCoords[0] = 0;
-			visibleEntryCoords[1] = 5;
+			setVisible(0, 5);
 		}
 		width = 0;
 		for(GuiListEntry entry : entries)
@@ -54,10 +54,10 @@ public class GuiList extends Gui
 		height = 0;
 		for(GuiListEntry entry : visibleEntries)
 		{
-			
-			entry.drawEntry(xPos, entryY);
-			this.drawString(mc.fontRendererObj, "|", xPos, entryY, 0xC80000);
-			this.drawString(mc.fontRendererObj, "|", xPos + width, entryY, 0xC80000);
+
+			entry.drawEntry(xPos + ENTRYPADDING, entryY);
+			this.drawString(mc.fontRendererObj, "|", xPos + ENTRYPADDING, entryY, 0xC80000);
+			this.drawString(mc.fontRendererObj, "|", xPos + width + ENTRYPADDING, entryY, 0xC80000);
 			height += entry.getHeight();
 			entryY += entry.getHeight();
 		}
@@ -72,8 +72,7 @@ public class GuiList extends Gui
 		else if (delta < 0) scrollDown();
 		this.visibleEntries = entries.subList(visibleEntryCoords[0], visibleEntryCoords[1]);
 		//Pass clicks to the entry that was clicked
-		int button = Mouse.getEventButton();
-		if (button != -1)
+		if (Mouse.getEventButtonState())
 		{
 			ScaledResolution sr = new ScaledResolution(mc);
 			int mouseX = Mouse.getX() * sr.getScaledWidth() / mc.displayWidth;
@@ -84,20 +83,29 @@ public class GuiList extends Gui
 				GuiListEntry clickedEntry = getClickedEntryFromY(mouseY);
 				if (clickedEntry != null)
 				{
-					clickedEntry.onClicked(button);
+					clickedEntry.onClicked(Mouse.getEventButton());
 				}
 			}
 		}
 	}
 	
+	private void setVisible(int from, int to)
+	{
+		this.visibleEntryCoords[0] = from;
+		this.visibleEntryCoords[1] = to;
+		this.visibleEntries = entries.subList(from, to);
+	}
+
 	private GuiListEntry getClickedEntryFromY(int y)
 	{
-		int slotHeight = 0;
+		int slotHeight = this.yPos;
 		for(GuiListEntry entry : visibleEntries)
 		{
 			slotHeight += entry.getHeight();
-			System.out.println(y + " : " + slotHeight);
-			if (slotHeight + (entry.getHeight() / 16) >= y) return entry;
+			if (slotHeight >= y)
+			{
+				return entry;
+			}
 		}
 		return null;
 	}
@@ -107,8 +115,7 @@ public class GuiList extends Gui
 	{
 		if (visibleEntryCoords[0] != 0)
 		{
-			visibleEntryCoords[0] -= 1;
-			visibleEntryCoords[1] -= 1;
+			setVisible(visibleEntryCoords[0] - 1, visibleEntryCoords[1] - 1);
 		}
 	}
 
@@ -116,8 +123,7 @@ public class GuiList extends Gui
 	{
 		if (visibleEntryCoords[1] != entries.size())
 		{
-			visibleEntryCoords[0] += 1;
-			visibleEntryCoords[1] += 1;
+			setVisible(visibleEntryCoords[0] + 1, visibleEntryCoords[1] + 1);
 		}
 	}
 }
