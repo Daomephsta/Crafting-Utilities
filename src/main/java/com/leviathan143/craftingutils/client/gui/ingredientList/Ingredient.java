@@ -17,10 +17,7 @@ public class Ingredient extends GuiListEntry
 	public Ingredient(ItemStack stack) 
 	{
 		this.stack = stack;
-		if (stack.getItem() instanceof ItemBlock)
-			this.text = I18n.format(((ItemBlock)stack.getItem()).getBlock().getLocalizedName()) + " x" + stack.stackSize;
-		else 
-			this.text = I18n.format(stack.getUnlocalizedName() + ".name") + " x" + stack.stackSize;
+		this.text = stack.getDisplayName() + " x " + stack.stackSize;
 	}
 	
 	public Ingredient(Item item) 

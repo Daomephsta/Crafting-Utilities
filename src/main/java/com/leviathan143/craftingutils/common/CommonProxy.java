@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import com.leviathan143.craftingutils.client.gui.CUGuiHandler;
 import com.leviathan143.craftingutils.common.items.CUItems;
+import com.leviathan143.craftingutils.common.packets.CUPacketHandler;
 
 public class CommonProxy 
 {
@@ -20,6 +21,7 @@ public class CommonProxy
 	{
 		this.clientInit(event);
 		NetworkRegistry.INSTANCE.registerGuiHandler(CraftingUtils.instance, new  CUGuiHandler());
+		CUPacketHandler.registerPackets();
 	}
 	
 	public void postInit(FMLPostInitializationEvent event)

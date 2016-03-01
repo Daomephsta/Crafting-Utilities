@@ -1,4 +1,4 @@
-package com.leviathan143.craftingutils.common;
+package com.leviathan143.craftingutils.common.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

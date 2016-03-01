@@ -12,8 +12,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
 import com.leviathan143.craftingutils.client.gui.lib.GuiList;
-import com.leviathan143.craftingutils.common.DummyContainer;
 import com.leviathan143.craftingutils.common.CraftingUtils.Constants;
+import com.leviathan143.craftingutils.common.container.DummyContainer;
 
 public class GuiDisplayIngredients extends GuiContainer
 {
@@ -26,7 +26,6 @@ public class GuiDisplayIngredients extends GuiContainer
 		super(new DummyContainer());
 		mc = minecraft;
 		ingList = ingredients;
-		ingList.add(new Ingredient(Blocks.bedrock));
 	}
 
 	@Override
