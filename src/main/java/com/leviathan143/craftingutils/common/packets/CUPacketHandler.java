@@ -7,7 +7,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.leviathan143.craftingutils.common.CraftingUtils.Constants;
-import com.leviathan143.craftingutils.common.packets.PacketRequestIngredientsUpdate.PacketRequestIngredientsUpdateHandler;
 import com.leviathan143.craftingutils.common.packets.PacketUpdateIngredients.PacketUpdateIngredientsHandler;
 
 public class CUPacketHandler 
@@ -17,9 +16,7 @@ public class CUPacketHandler
 	
 	public static void registerPackets()
 	{
-		registerPacket(PacketUpdateIngredientsHandler.class, PacketUpdateIngredients.class, Side.CLIENT);
 		registerPacket(PacketUpdateIngredientsHandler.class, PacketUpdateIngredients.class, Side.SERVER);
-		registerPacket(PacketRequestIngredientsUpdateHandler.class, PacketRequestIngredientsUpdate.class, Side.SERVER);
 	}
 	
 	private static <REQ extends IMessage, REPLY extends IMessage> void registerPacket(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side)

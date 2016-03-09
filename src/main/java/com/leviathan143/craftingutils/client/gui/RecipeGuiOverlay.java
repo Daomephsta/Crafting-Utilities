@@ -23,6 +23,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import com.leviathan143.craftingutils.client.gui.lib.GuiIconButton;
 import com.leviathan143.craftingutils.common.CraftingUtils;
 import com.leviathan143.craftingutils.common.items.IngredientList;
+import com.leviathan143.craftingutils.common.packets.CUPacketHandler;
+import com.leviathan143.craftingutils.common.packets.PacketUpdateIngredients;
 
 public class RecipeGuiOverlay extends GuiScreen
 {
@@ -163,7 +165,7 @@ public class RecipeGuiOverlay extends GuiScreen
 			List<ItemStack> allIngredients = new ArrayList<ItemStack>();
 			allIngredients.addAll(pendingIngredients);
 			allIngredients.addAll(ingredients);
-			IngredientList.writeIngredientsToNBT(Minecraft.getMinecraft().thePlayer.getHeldItem(), allIngredients);
+			CUPacketHandler.CHANNEL.sendToServer(new PacketUpdateIngredients(Minecraft.getMinecraft().thePlayer.getHeldItem(), allIngredients));
 		}
 		else if(id == 1)
 		{
