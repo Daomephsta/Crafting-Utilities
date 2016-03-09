@@ -1,84 +1,77 @@
 package com.leviathan143.craftingutils.common.packets;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+
+import com.leviathan143.craftingutils.common.items.IngredientList;
 
 public class PacketUpdateIngredients implements IMessage 
 {
-	private ItemStack list;
-	private NBTTagCompound nbt;
+	private List<ItemStack> ingredients;
 
 	public PacketUpdateIngredients() {}
 
-	public PacketUpdateIngredients(ItemStack list) 
+	public PacketUpdateIngredients(List<ItemStack> ingredients) 
 	{
-		this.list = list;
-		this.nbt = list.getTagCompound(); 
+		this.ingredients = ingredients; 
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) 
 	{
-		list = ByteBufUtils.readItemStack(buf);
-		nbt = ByteBufUtils.readTag(buf);
+		ingredients = new ArrayList<ItemStack>();
+		int listSize = buf.readInt();
+		for(int is = 0; is < listSize; is++)
+		{
+			ingredients.add(ByteBufUtils.readItemStack(buf));
+		}
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) 
 	{
-		ByteBufUtils.writeItemStack(buf, list);
-		ByteBufUtils.writeTag(buf, nbt);
+		buf.writeInt(ingredients.size());
+		for(ItemStack ingredient : ingredients)
+		{
+			ByteBufUtils.writeItemStack(buf, ingredient);
+		}
 	}
 
-	public ItemStack getList() 
+	public List<ItemStack> getIngredients() 
 	{
-		return list;
-	}
-
-	public NBTTagCompound getNbt() 
-	{
-		return nbt;
+		return ingredients;
 	}
 
 	public static class PacketUpdateIngredientsHandler implements IMessageHandler<PacketUpdateIngredients, IMessage>
 	{
 		@Override
-		public IMessage onMessage(PacketUpdateIngredients message, MessageContext ctx) 
+		public IMessage onMessage(final PacketUpdateIngredients message, final MessageContext ctx) 
 		{
-			final ItemStack list = message.getList();
-			final NBTTagCompound nbt = message.getNbt();
-			Runnable r = new Runnable() 
-			{
-				@Override
-				public void run() 
+				MinecraftServer.getServer().addScheduledTask(new Runnable() 
 				{
-					processMessage(list, nbt);
-				}
-			};
-
-			if(ctx.side.isClient())
-			{
-				Minecraft.getMinecraft().addScheduledTask(r);
-			}
-			else if (ctx.side.isServer()) 
-			{
-				MinecraftServer.getServer().addScheduledTask(r);
-			}
-			System.out.println("PacketUpdateIngredients handled on " + ctx.side.toString());
+					@Override
+					public void run() 
+					{
+						processMessage(ctx.getServerHandler().playerEntity, message.getIngredients());
+					}
+				});
+			System.out.println("PacketUpdateIngredients handled on " + ctx.side.toString() + message.getIngredients());
 			return null;
 		}
 
-		public void processMessage(ItemStack list, NBTTagCompound nbt)
+		public void processMessage(EntityPlayerMP player, List<ItemStack> ingredients)
 		{
-			list.readFromNBT(nbt);
+			IngredientList.writeIngredientsToNBT(player.getHeldItem(), ingredients);
 		}
 	}
 }
