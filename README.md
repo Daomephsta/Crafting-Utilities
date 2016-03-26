@@ -1,4 +1,7 @@
 # Crafting-Utilities
+
+**Discontinued due to the release of [JEC](http://mods.curse.com/mc-mods/minecraft/242223-just-enough-calculation), which does the same thing, there isn't room for both mods in the mod ecosystem.**
+
 The MIT License (MIT)
 
 Copyright (c) 2016 Leviathan143
